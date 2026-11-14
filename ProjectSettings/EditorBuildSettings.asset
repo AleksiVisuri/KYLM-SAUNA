@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Sauna.unity
+    guid: f8a58ec1c1692bb418eb1325cf266821
   m_configObjects: {}
