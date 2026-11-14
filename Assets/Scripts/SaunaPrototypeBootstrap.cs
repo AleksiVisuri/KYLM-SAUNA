@@ -12,6 +12,8 @@ public sealed class SaunaPrototypeBootstrap : MonoBehaviour
 
     private void Start()
     {
+        if (!Application.isPlaying)
+            return;
         if (!createRuntimePlaceholders) return;
         var target = CreateTarget();
         var launcher = CreateLauncher(target.transform.position);

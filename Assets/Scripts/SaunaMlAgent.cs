@@ -64,7 +64,7 @@ public sealed class SaunaMlAgent : Agent
     private void OnRewardReceived(float reward)
     {
         AddReward(reward);
-        if (reward >= 20f)
+        if (reward < 0f || reward >= 20f)
             EndEpisode();
     }
 
