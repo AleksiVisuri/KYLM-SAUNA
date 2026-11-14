@@ -45,6 +45,11 @@ public sealed class SaunaProjectile : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (!resolved)
+        {
+            resolved = true;
+            ReportReward(-1f);
+        }
         launcher?.ProjectileFinished(this);
     }
 }

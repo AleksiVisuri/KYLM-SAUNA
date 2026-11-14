@@ -13,7 +13,7 @@ public sealed class SaunaLauncher : MonoBehaviour
     [SerializeField, Range(0.1f, 10f)] private float secondsBetweenThrows = 1f;
 
     public float LastReward { get; private set; }
-    public bool CanLaunch => activeProjectile == null && Time.time >= nextLaunchTime;
+    public bool CanLaunch => Time.time >= nextLaunchTime;
     public System.Action<float> RewardReceived;
     private SaunaProjectile activeProjectile;
     private float nextLaunchTime;
@@ -37,6 +37,7 @@ public sealed class SaunaLauncher : MonoBehaviour
         projectile.gameObject.SetActive(true);
         projectile.Initialize(this);
         activeProjectile = projectile;
+        nextLaunchTime = Time.time + secondsBetweenThrows;
         projectile.GetComponent<Rigidbody>().velocity = direction.normalized * Mathf.Lerp(minLaunchSpeed, maxLaunchSpeed, power);
         LastReward = 0f;
         return projectile;
@@ -45,10 +46,7 @@ public sealed class SaunaLauncher : MonoBehaviour
     public void ProjectileFinished(SaunaProjectile projectile)
     {
         if (activeProjectile == projectile)
-        {
             activeProjectile = null;
-            nextLaunchTime = Time.time + secondsBetweenThrows;
-        }
     }
 
     public void ReceiveReward(float reward)

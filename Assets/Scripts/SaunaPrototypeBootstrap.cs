@@ -59,7 +59,7 @@ public sealed class SaunaPrototypeBootstrap : MonoBehaviour
         return launcher;
     }
 
-    private static void SetPrivateField(Object target, string fieldName, Object value)
+    private static void SetPrivateField(Object target, string fieldName, object value)
     {
         var field = target.GetType().GetField(fieldName, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
         field?.SetValue(target, value);
