@@ -354,7 +354,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   createRuntimePlaceholders: 1
-  secondsBetweenThrows: 1
+  addMlAgent: 1
+  secondsBetweenThrows: 0.1
 --- !u!114 &1200000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,13 +368,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c1a4f2e9b6d4a8f91c3e5b7d2f0a6c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  behaviorName: SaunaBehavior
   vectorObservationSize: 4
   continuousActionCount: 3
   decisionPeriod: 1
-  heuristicTesting: 1
+  heuristicTesting: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 979772319}
   - {fileID: 898624454}
+  - {fileID: 1200000001}

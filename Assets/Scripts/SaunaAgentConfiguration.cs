@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 public sealed class SaunaAgentConfiguration : MonoBehaviour
 {
+    [SerializeField] private string behaviorName = "SaunaBehavior";
     [SerializeField, Min(1)] private int vectorObservationSize = 4;
     [SerializeField, Min(1)] private int continuousActionCount = 3;
     [SerializeField, Range(1, 20)] private int decisionPeriod = 1;
@@ -19,6 +20,7 @@ public sealed class SaunaAgentConfiguration : MonoBehaviour
         behavior.BrainParameters.VectorObservationSize = vectorObservationSize;
         behavior.BrainParameters.NumStackedVectorObservations = 1;
         behavior.BrainParameters.ActionSpec = ActionSpec.MakeContinuous(continuousActionCount);
+        behavior.BehaviorName = behaviorName;
         behavior.BehaviorType = heuristicTesting ? BehaviorType.HeuristicOnly : BehaviorType.Default;
     }
 
