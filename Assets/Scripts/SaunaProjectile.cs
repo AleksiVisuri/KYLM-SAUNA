@@ -36,9 +36,15 @@ public sealed class SaunaProjectile : MonoBehaviour
         }
         else
         {
-            ReportReward(collision.collider.CompareTag("InvalidArea") ? -5f : -1f);
+            var invalidAreaLayer = LayerMask.NameToLayer("InvalidArea");
+            ReportReward(invalidAreaLayer >= 0 && collision.collider.gameObject.layer == invalidAreaLayer ? -5f : -1f);
         }
 
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        launcher?.ProjectileFinished(this);
     }
 }

@@ -12,6 +12,7 @@ public sealed class SaunaEpisodeController : MonoBehaviour
     public int ShotCount { get; private set; }
     public float PreviousReward { get; private set; }
     public bool EpisodeComplete => target != null && target.IsHeated;
+    public System.Action<float> RewardReceived;
 
     public Vector4 GetObservations()
     {
@@ -28,7 +29,7 @@ public sealed class SaunaEpisodeController : MonoBehaviour
 
     public void Step(float horizontal, float vertical, float power)
     {
-        if (EpisodeComplete || launcher == null)
+        if (EpisodeComplete || launcher == null || !launcher.CanLaunch)
             return;
 
         launcher.Launch(horizontal, vertical, power);
@@ -45,7 +46,11 @@ public sealed class SaunaEpisodeController : MonoBehaviour
 
     public void Configure(SaunaLauncher configuredLauncher, SaunaTarget configuredTarget)
     {
+        if (launcher != null) launcher.RewardReceived -= ForwardReward;
         launcher = configuredLauncher;
         target = configuredTarget;
+        if (launcher != null) launcher.RewardReceived += ForwardReward;
     }
+
+    private void ForwardReward(float reward) => RewardReceived?.Invoke(reward);
 }

@@ -7,14 +7,25 @@ using UnityEngine;
 public sealed class SaunaPrototypeBootstrap : MonoBehaviour
 {
     [SerializeField] private bool createRuntimePlaceholders = true;
+    [SerializeField] private bool addMlAgent = true;
+    [SerializeField, Range(0.1f, 10f)] private float secondsBetweenThrows = 1f;
 
     private void Start()
     {
         if (!createRuntimePlaceholders) return;
         var target = CreateTarget();
         var launcher = CreateLauncher(target.transform.position);
+        SetPrivateField(launcher, "secondsBetweenThrows", secondsBetweenThrows);
         var episode = gameObject.AddComponent<SaunaEpisodeController>();
         episode.Configure(launcher, target);
+        var configuration = GetComponent<SaunaAgentConfiguration>();
+        configuration?.PrepareBehaviorParameters();
+        if (addMlAgent)
+        {
+            var agent = gameObject.AddComponent<SaunaMlAgent>();
+            agent.BindEpisode(episode);
+            configuration?.ConfigureDecisionRequester();
+        }
         episode.Step(0f, 0.45f, 0.65f);
     }
 

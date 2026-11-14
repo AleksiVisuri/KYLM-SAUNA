@@ -10,11 +10,18 @@ public sealed class SaunaLauncher : MonoBehaviour
     [SerializeField] private Transform launchOrigin;
     [SerializeField, Min(0.1f)] private float minLaunchSpeed = 8f;
     [SerializeField, Min(0.1f)] private float maxLaunchSpeed = 25f;
+    [SerializeField, Range(0.1f, 10f)] private float secondsBetweenThrows = 1f;
 
     public float LastReward { get; private set; }
+    public bool CanLaunch => activeProjectile == null && Time.time >= nextLaunchTime;
+    public System.Action<float> RewardReceived;
+    private SaunaProjectile activeProjectile;
+    private float nextLaunchTime;
 
     public SaunaProjectile Launch(float horizontal, float vertical, float power)
     {
+        if (!CanLaunch)
+            return null;
         if (projectilePrefab == null || launchOrigin == null)
         {
             Debug.LogError("SaunaLauncher requires a projectile prefab and launch origin.");
@@ -25,18 +32,29 @@ public sealed class SaunaLauncher : MonoBehaviour
         vertical = Mathf.Clamp01(vertical);
         power = Mathf.Clamp01(power);
 
-        var direction = Quaternion.Euler(vertical * 90f, horizontal * 90f, 0f) * launchOrigin.forward;
+        var direction = Quaternion.Euler(-vertical * 60f, horizontal * 90f, 0f) * launchOrigin.forward;
         var projectile = Instantiate(projectilePrefab, launchOrigin.position, Quaternion.LookRotation(direction));
         projectile.gameObject.SetActive(true);
         projectile.Initialize(this);
+        activeProjectile = projectile;
         projectile.GetComponent<Rigidbody>().velocity = direction.normalized * Mathf.Lerp(minLaunchSpeed, maxLaunchSpeed, power);
         LastReward = 0f;
         return projectile;
     }
 
+    public void ProjectileFinished(SaunaProjectile projectile)
+    {
+        if (activeProjectile == projectile)
+        {
+            activeProjectile = null;
+            nextLaunchTime = Time.time + secondsBetweenThrows;
+        }
+    }
+
     public void ReceiveReward(float reward)
     {
         LastReward += reward;
+        RewardReceived?.Invoke(reward);
         Debug.Log($"Sauna launcher reward: {reward:+0.##;-0.##;0} (episode total: {LastReward:0.##})");
     }
 }
