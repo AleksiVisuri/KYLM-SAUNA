@@ -9,14 +9,16 @@ public sealed class SaunaPrototypeBootstrap : MonoBehaviour
     [SerializeField] private bool createRuntimePlaceholders = true;
     [SerializeField] private bool addMlAgent = true;
     [SerializeField, Range(0.1f, 10f)] private float secondsBetweenThrows = 1f;
+    [SerializeField] private Vector3 launcherPosition = new Vector3(0f, 1f, 0f);
+    [SerializeField] private bool aimLauncherAtTargetOnStart = false;
 
     private void Start()
     {
         if (!Application.isPlaying)
             return;
         if (!createRuntimePlaceholders) return;
-        var target = CreateTarget();
-        var launcher = CreateLauncher(target.transform.position);
+        var target = FindOrCreateTarget();
+        var launcher = CreateLauncher(GetAimPoint(target));
         SetPrivateField(launcher, "secondsBetweenThrows", secondsBetweenThrows);
         var episode = gameObject.AddComponent<SaunaEpisodeController>();
         episode.Configure(launcher, target);
@@ -31,7 +33,41 @@ public sealed class SaunaPrototypeBootstrap : MonoBehaviour
         episode.Step(0f, 0.45f, 0.65f);
     }
 
-    private static SaunaTarget CreateTarget()
+    private static SaunaTarget FindOrCreateTarget()
+    {
+        var sauna = GameObject.Find("Sauna");
+        if (sauna != null)
+        {
+            foreach (var child in sauna.GetComponentsInChildren<Transform>(true))
+            {
+                if (child.name != "Cube.041") continue;
+                var target = child.GetComponent<SaunaTarget>() ?? child.gameObject.AddComponent<SaunaTarget>();
+                if (child.GetComponent<Collider>() == null)
+                {
+                    var mesh = child.GetComponent<MeshFilter>();
+                    if (mesh != null && mesh.sharedMesh != null)
+                        child.gameObject.AddComponent<MeshCollider>().sharedMesh = mesh.sharedMesh;
+                    else
+                        child.gameObject.AddComponent<BoxCollider>();
+                }
+                return target;
+            }
+        }
+
+        return CreateFallbackTarget();
+    }
+
+    private static Vector3 GetAimPoint(SaunaTarget target)
+    {
+        var renderer = target.GetComponentInChildren<Renderer>();
+        if (renderer != null)
+            return renderer.bounds.center;
+
+        var collider = target.GetComponentInChildren<Collider>();
+        return collider != null ? collider.bounds.center : target.transform.position;
+    }
+
+    private static SaunaTarget CreateFallbackTarget()
     {
         var targetObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         targetObject.name = "Prototype Target (Replace)";
@@ -40,14 +76,16 @@ public sealed class SaunaPrototypeBootstrap : MonoBehaviour
         return targetObject.AddComponent<SaunaTarget>();
     }
 
-    private static SaunaLauncher CreateLauncher(Vector3 targetPosition)
+    private SaunaLauncher CreateLauncher(Vector3 targetPosition)
     {
         var launcherObject = new GameObject("Prototype Launcher (Replace)");
-        launcherObject.transform.position = new Vector3(0f, 1f, 0f);
-        launcherObject.transform.forward = (targetPosition - launcherObject.transform.position).normalized;
+        launcherObject.transform.position = launcherPosition;
+        launcherObject.transform.forward = aimLauncherAtTargetOnStart
+            ? (targetPosition - launcherObject.transform.position).normalized
+            : Vector3.forward;
         var origin = new GameObject("Launch Origin").transform;
         origin.SetParent(launcherObject.transform, false);
-        origin.localPosition = Vector3.forward;
+        origin.localPosition = Vector3.zero;
 
         var projectileObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         projectileObject.name = "Prototype Projectile (Runtime)";

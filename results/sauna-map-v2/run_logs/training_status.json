@@ -1,0 +1,29 @@
+{
+    "SaunaBehavior": {
+        "checkpoints": [
+            {
+                "steps": 36385,
+                "file_path": "results\\sauna-map-v2\\SaunaBehavior\\SaunaBehavior-36385.onnx",
+                "reward": -1.055405375119802,
+                "creation_time": 1794728142.105908,
+                "auxillary_file_paths": [
+                    "results\\sauna-map-v2\\SaunaBehavior\\SaunaBehavior-36385.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 36385,
+            "file_path": "results\\sauna-map-v2\\SaunaBehavior.onnx",
+            "reward": -1.055405375119802,
+            "creation_time": 1794728142.105908,
+            "auxillary_file_paths": [
+                "results\\sauna-map-v2\\SaunaBehavior\\SaunaBehavior-36385.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.10.1+cpu"
+    }
+}

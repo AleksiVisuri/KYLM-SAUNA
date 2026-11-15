@@ -9,15 +9,24 @@
                 "auxillary_file_paths": [
                     "results\\sauna-episodes-v3\\SaunaBehavior\\SaunaBehavior-136398.pt"
                 ]
+            },
+            {
+                "steps": 164747,
+                "file_path": "results\\sauna-episodes-v3\\SaunaBehavior\\SaunaBehavior-164747.onnx",
+                "reward": -1.0499999523162842,
+                "creation_time": 1794727025.0890992,
+                "auxillary_file_paths": [
+                    "results\\sauna-episodes-v3\\SaunaBehavior\\SaunaBehavior-164747.pt"
+                ]
             }
         ],
         "final_checkpoint": {
-            "steps": 136398,
+            "steps": 164747,
             "file_path": "results\\sauna-episodes-v3\\SaunaBehavior.onnx",
-            "reward": -0.7293420841819361,
-            "creation_time": 1794672265.1977315,
+            "reward": -1.0499999523162842,
+            "creation_time": 1794727025.0890992,
             "auxillary_file_paths": [
-                "results\\sauna-episodes-v3\\SaunaBehavior\\SaunaBehavior-136398.pt"
+                "results\\sauna-episodes-v3\\SaunaBehavior\\SaunaBehavior-164747.pt"
             ]
         }
     },

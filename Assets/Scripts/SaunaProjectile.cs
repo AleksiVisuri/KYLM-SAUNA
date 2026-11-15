@@ -10,12 +10,21 @@ public sealed class SaunaProjectile : MonoBehaviour
     [SerializeField, Min(0.1f)] private float lifetime = 8f;
 
     private SaunaLauncher launcher;
+    private SaunaTarget target;
+    private float closestDistance = float.MaxValue;
     private bool resolved;
 
     public void Initialize(SaunaLauncher owner)
     {
         launcher = owner;
+        target = FindObjectOfType<SaunaTarget>();
         Destroy(gameObject, lifetime);
+    }
+
+    private void FixedUpdate()
+    {
+        if (target != null)
+            closestDistance = Mathf.Min(closestDistance, Vector3.Distance(transform.position, target.transform.position));
     }
 
     public void ReportReward(float reward)
@@ -48,7 +57,8 @@ public sealed class SaunaProjectile : MonoBehaviour
         if (!resolved)
         {
             resolved = true;
-            ReportReward(-1f);
+            var closeness = target == null ? 0f : target.GetCloseness(transform.position);
+            ReportReward(-1f + 0.9f * closeness);
         }
         launcher?.ProjectileFinished(this);
     }

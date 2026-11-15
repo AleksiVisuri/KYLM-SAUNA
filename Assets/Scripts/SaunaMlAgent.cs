@@ -45,7 +45,10 @@ public sealed class SaunaMlAgent : Agent
     {
         if (episode == null)
             return;
-        episode.Step(actions.ContinuousActions[0], actions.ContinuousActions[1], actions.ContinuousActions[2]);
+        var horizontal = actions.ContinuousActions[0];
+        var vertical = (actions.ContinuousActions[1] + 1f) * 0.5f;
+        var power = (actions.ContinuousActions[2] + 1f) * 0.5f;
+        episode.Step(horizontal, vertical, power);
         AddReward(-0.01f);
         if (episode.EpisodeComplete)
             EndEpisode();
@@ -55,7 +58,7 @@ public sealed class SaunaMlAgent : Agent
     {
         var continuous = actionsOut.ContinuousActions;
         continuous[0] = 0f;
-        continuous[1] = 0.45f;
+        continuous[1] = 0f;
         continuous[2] = 0.65f;
     }
 

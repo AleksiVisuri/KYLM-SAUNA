@@ -14,6 +14,14 @@ public sealed class SaunaTarget : MonoBehaviour
     public float DesiredTemperature => desiredTemperature;
     public bool IsHeated => temperature >= desiredTemperature;
 
+    public float GetCloseness(Vector3 point)
+    {
+        var collider = GetComponent<Collider>();
+        if (collider == null) return 0f;
+        var distance = Vector3.Distance(point, collider.ClosestPoint(point));
+        return 1f - Mathf.Clamp01(distance / 10f);
+    }
+
     public float RegisterHit(SaunaProjectile projectile)
     {
         if (projectile == null)
