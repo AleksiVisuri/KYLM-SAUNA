@@ -7,9 +7,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-# Copy the exported headless Unity build here once the training environment is finalized.
-# Expected entry point: /app/sauna.x86_64
-COPY build/ /app/
-RUN chmod +x /app/sauna.x86_64 2>/dev/null || true
+COPY build.x86_64 /app/build.x86_64
+COPY UnityPlayer.so /app/UnityPlayer.so
+COPY build_Data /app/build_Data
+RUN chmod +x /app/build.x86_64
 
-ENTRYPOINT ["/app/sauna.x86_64"]
+ENTRYPOINT ["/app/build.x86_64", "-batchmode", "-nographics", "-logFile", "-"]

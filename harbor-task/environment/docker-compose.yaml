@@ -1,0 +1,6 @@
+services:
+  sauna-mcp:
+    build: {context: ., dockerfile: mcp.Dockerfile}
+    networks: [harbor]
+networks:
+  harbor: {}

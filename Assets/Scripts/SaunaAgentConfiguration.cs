@@ -1,6 +1,7 @@
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Policies;
+using Unity.Barracuda;
 using UnityEngine;
 
 /// <summary>
@@ -9,6 +10,8 @@ using UnityEngine;
 public sealed class SaunaAgentConfiguration : MonoBehaviour
 {
     [SerializeField] private string behaviorName = "SaunaBehavior";
+    [SerializeField] private NNModel inferenceModel;
+    [SerializeField] private bool inferenceMode;
     [SerializeField, Min(1)] private int vectorObservationSize = 4;
     [SerializeField, Min(1)] private int continuousActionCount = 3;
     [SerializeField, Range(1, 20)] private int decisionPeriod = 1;
@@ -21,7 +24,8 @@ public sealed class SaunaAgentConfiguration : MonoBehaviour
         behavior.BrainParameters.NumStackedVectorObservations = 1;
         behavior.BrainParameters.ActionSpec = ActionSpec.MakeContinuous(continuousActionCount);
         behavior.BehaviorName = behaviorName;
-        behavior.BehaviorType = heuristicTesting ? BehaviorType.HeuristicOnly : BehaviorType.Default;
+        behavior.Model = inferenceModel;
+        behavior.BehaviorType = inferenceMode ? BehaviorType.InferenceOnly : (heuristicTesting ? BehaviorType.HeuristicOnly : BehaviorType.Default);
     }
 
     public void ConfigureDecisionRequester()
